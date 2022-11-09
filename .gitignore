@@ -1,0 +1,40 @@
+## General
+.cvs
+.htaccess
+wp-config.php
+.svn
+*.bak
+*.log
+*.swp
+app/readme.html
+app/license.txt
+app/licencia.txt
+app/xmlrpc.php
+app/wp-content/object-cache.php
+
+## Windows
+Desktop.ini
+Thumbs.db
+
+## Mac
+.DS_Store
+nbproject/*
+## Development
+.sass-cache
+.phpintel
+node_modules
+src/vendor
+bower_components
+app/wp-content/wflogs/*.php
+app/wp-content/wflogs/*.mmdb
+!app/wp-content/wflogs/index.php
+src/.sonar/
+
+## directories
+
+app/wp-content/uploads/
+backup-db/
+backups/
+app/wp-content/cache/
+.idea/
+.files-deploy/
