@@ -1,0 +1,82 @@
+{
+    "containerDefinitions": [
+      {
+        "image": "820233355588.dkr.ecr.us-east-1.amazonaws.com/%REPO%",
+        "essential": true,
+        "name": "%CONTAINERNAME%",
+        "cpu": %CPU%,
+        "memory": %MEMORY%,
+        "portMappings": [
+          {
+            "protocol": "tcp",
+            "containerPort": %CONTAINERPORT%
+          }
+        ],
+        "logConfiguration": {
+          "logDriver": "awslogs",
+          "options": {
+            "awslogs-group": "/ecs/td-blog-unete-%ENVIRONMENT%",
+            "awslogs-region": "us-east-1",
+            "awslogs-stream-prefix": "ecs",
+            "awslogs-create-group": "true"
+          }
+        },
+        "environment": [
+          {
+              "name": "NEW_RELIC_APP_NAME",
+              "value": "%NEW_RELIC_APP_NAME%"
+          },
+          {
+              "name": "NEW_RELIC_DISTRIBUTED_TRACING_ENABLED",
+              "value": "true"
+          },
+          {
+              "name": "NEW_RELIC_LABELS",
+              "value": "Grupo:UneteV3;Entorno:%UENVIRONMENT%"
+          },
+          {
+            "name": "NEW_RELIC_LICENSE_KEY",
+            "value": "%NEW_RELIC_LICENSE_KEY%"
+          }
+        ],
+        "ulimits": [
+          {
+            "softLimit": %MEMORY%,
+            "hardLimit": %MEMORY%,
+            "name": "nofile"
+          }
+        ]
+      }
+    ],
+    "requiresCompatibilities": [
+      "FARGATE"
+    ],
+    "taskRoleArn" : "arn:aws:iam::820233355588:role/Unete_Blog_ECS_Role_%UENVIRONMENT%", 
+    "executionRoleArn": "arn:aws:iam::820233355588:role/ecsTaskExecutionRole",
+    "networkMode": "awsvpc",
+    "cpu": "%CPU%",
+    "family": "%TASKDEFINITIONNAME%",
+    "memory": "%MEMORY%",
+    "tags": [
+      {
+        "key": "Entorno",
+        "value": "%ENVIRONMENT%"
+      },
+      {
+        "key": "Grupo",
+        "value": "UneteV3"
+      },
+      {
+        "key": "Tipo",
+        "value": "Proyecto"
+      },
+      {
+        "key": "Contacto",
+        "value": "Juan Contreras juancontreras@belcorp.biz"
+      },
+      {
+        "key": "NewRelic",
+        "value": "true"
+      }
+    ]
+}

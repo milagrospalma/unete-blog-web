@@ -1,0 +1,482 @@
+// Copy file in unete-blog-web/ and rename file
+import hudson.model.*
+import hudson.EnvVars
+import groovy.json.JsonSlurperClassic
+import groovy.json.JsonBuilder
+import groovy.json.JsonOutput
+import java.net.URL
+import java.net.URLEncoder
+
+def DEPLOYMENT_OBJECT
+@NonCPS
+def jsonParse(def json) {
+    new groovy.json.JsonSlurperClassic().parseText(json)
+}
+
+pipeline {
+    agent {
+        label getLabel()
+    }
+    environment {
+        IMAGE_NAME = 'unete-v3/blog-unete'
+        IMAGE_NAME_DAEMON = 'unete-v3/blog-unete/daemon'
+        IMAGE_NAME_AGENT = 'unete-v3/blog-unete/agent'
+        AWS_REGION = 'us-east-1'
+        AWS_ACCOUNT = '820233355588'
+        AWS_CLI_VERSION = '1.16'
+        IMAGE_TAG = getShortCommitId()
+        ENVIRONMENT = getEnvironment()
+        UENVIRONMENT = getEnvironment().toUpperCase()
+        NEW_RELIC_ACCOUNT_ID = credentials('new_relic_account_id')
+        NEW_RELIC_APP_NAME = "ODP_BlogUnete_${UENVIRONMENT}"
+        NEW_RELIC_API_KEY = credentials('new_relic_api_key')
+        NEW_RELIC_LICENSE_KEY = credentials('new_relic_license_key')
+        NEW_RELIC_INSIGHTS_KEY = credentials('new_relic_insights_key')
+        DOCKERHUB_PASSWORD = credentials('dockerhub_beldevopstools_prd_credentials')
+    }
+
+    parameters {
+        string(name: 'DEPLOY_TO', defaultValue: '', description: '')
+    }
+
+    stages {
+        stage('Initialize') {
+            steps {
+                script{
+                    notifyBuildDevOps()
+                    NEW_RELIC_APP = getNewRelicApplication(NEW_RELIC_APP_NAME)
+                    sh "docker login -u beldevopstools -p ${DOCKERHUB_PASSWORD}"
+                }
+           }
+        }
+        stage('Download Config files'){
+            steps {
+                script{
+                    def downloadConfig = "aws s3 cp s3://belcorp-codedeploy/UneteWeb3.0/${ENVIRONMENT}/config/.env ${workspace}/.env"
+                    sh (returnStdout: false, script: downloadConfig, label: "Download configuration file")
+
+                    def downloadAWSResources = "aws s3 cp s3://belcorp-codedeploy/UneteWeb3.0/${ENVIRONMENT}/config/resources.json ${workspace}/resources.json"
+                    sh (returnStdout: false, script: downloadAWSResources, label: "Download aws resources file")
+
+                    def downloadLighthouse = "aws s3 cp s3://belcorp-codedeploy/UneteWeb3.0/${ENVIRONMENT}/config/lighthouserc.yml ${workspace}/lighthouserc.yml"
+                    sh (returnStdout: false, script: downloadLighthouse, label: "Download lighthouse file")
+
+                    def downloadNewRelic = "aws s3 cp s3://belcorp-codedeploy/UneteWeb3.0/${ENVIRONMENT}/config/nr_synthetics.json ${workspace}/nr_synthetics.json"
+                    sh (returnStdout: false, script: downloadNewRelic, label: "Download newrelic file")
+                }
+            }
+        }
+      /*  stage("SonarQube analysis - PR") {
+            when {
+                expression { env.CHANGE_ID != null }
+            }
+            steps {
+                script {
+                    def scannerHome = tool 'sonar-scanner';
+
+                    withSonarQubeEnv('Sonar') {
+                        sh "${scannerHome}/bin/sonar-scanner " +
+                        "-Dsonar.projectKey=blog-unete " +
+                        "-Dproject.settings=altimeafactory/sonar-project.properties " +
+                        "-Dsonar.analysis.mode=preview " +
+                        "-Dsonar.github.pullRequest=${env.PULL_REQUEST} " +
+                        "-Dsonar.github.oauth=${env.GITHUB_OAUTH_TOKEN} "
+                    }
+                }
+            }
+        }
+        stage("SonarQube analysis - Full") {
+            when {
+                expression { isDevelop() }
+            }
+            steps {
+                script {
+                    def scannerHome = tool 'sonar-scanner';
+
+                    withSonarQubeEnv('Sonar') {
+                        sh "${scannerHome}/bin/sonar-scanner " +
+                        "-Dsonar.projectKey=blog-unete:${BRANCH_NAME} " +
+                        "-Dproject.settings=altimeafactory/sonar-project.properties "
+                    }
+                }
+            }
+        }*/
+        stage('Build image') {
+           /* when {
+                expression { allowCommonBranches() || isMaster() }
+            }*/
+            steps {
+                script {
+                    sh '''
+                    #!/bin/bash -xe
+                        ls -la
+                        aws s3 cp s3://belcorp-codedeploy/UneteWeb3.0/${ENVIRONMENT}/blog-unete/wp-config.php app/wp-config.php --region ${AWS_REGION}
+                        aws s3 cp s3://belcorp-codedeploy/UneteWeb3.0/${ENVIRONMENT}/blog-unete/.htaccess app/.htaccess --region ${AWS_REGION}
+                        aws s3 cp s3://belcorp-codedeploy/UneteWeb3.0/${ENVIRONMENT}/blog-unete/robots.txt app/robots.txt --region ${AWS_REGION}
+                        aws s3 cp s3://belcorp-codedeploy/UneteWeb3.0/${ENVIRONMENT}/blog-unete/object-cache.php app/wp-content/object-cache.php --region ${AWS_REGION}
+                        aws s3 cp s3://belcorp-codedeploy/UneteWeb3.0/${ENVIRONMENT}/blog-unete/wflogs-template/attack-data.php app/wp-content/wflogs/attack-data.php --region ${AWS_REGION}
+                        aws s3 cp s3://belcorp-codedeploy/UneteWeb3.0/${ENVIRONMENT}/blog-unete/wflogs-template/template.php app/wp-content/wflogs/template.php --region ${AWS_REGION}
+                        aws s3 cp s3://belcorp-codedeploy/UneteWeb3.0/${ENVIRONMENT}/blog-unete/wflogs-template/config-livewaf.php app/wp-content/wflogs/config-livewaf.php --region ${AWS_REGION}
+                    '''
+                    def repositoryName = "${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com/${IMAGE_NAME}"
+                    def repositoryNameDaemon = "${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com/${IMAGE_NAME_DAEMON}"
+                    def repositoryNameAgent = "${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com/${IMAGE_NAME_AGENT}"
+                    def concatImagesTags = ""
+
+                    def defaultTagsList = [
+                      "${repositoryName}:${IMAGE_TAG}-${getFixedImageTag()}"
+                    ]
+
+                    defaultTagsList.each { imageTag ->
+                       concatImagesTags = "${concatImagesTags}" + " -t ${imageTag}"
+                    }
+
+                    sh "\$(aws ecr get-login --no-include-email --region ${AWS_REGION})"
+                    sh "docker build ${concatImagesTags} ."
+                    sh "docker build ${concatImagesTags} ."
+                    sh "docker build ${concatImagesTags} ."
+                }
+            }
+        }
+
+        stage ('Push image') {
+           /* when {
+                expression { allowCommonBranches() || isMaster() }
+            }*/
+            steps {
+                script {
+                    sh "\$(aws ecr get-login --no-include-email --region ${AWS_REGION})"
+                    def repositoryName = "${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com/${IMAGE_NAME}"
+                    sh "docker push ${repositoryName}"
+                }
+            }
+        }
+
+        stage ('Deploy') {
+           /* when {
+                expression { allowCommonBranches() || enableDeploy() }
+            }*/
+            steps {
+                script {
+                    def imageName = "${IMAGE_NAME}:${IMAGE_TAG}-${getFixedImageTag()}"
+                    def containerName = "blog-unete-${ENVIRONMENT}"
+                    def containerPort = 80
+                    def applicationName = "AppECS-ecs-blog-unete"
+                    def deploymentGroupName = "DgpECS-ecs-blog-unete-${ENVIRONMENT}"
+                    def taskDefinitionName = "td-blog-unete-${ENVIRONMENT}"
+
+                    def tdContent = readFile "./aws/task-definition-params.json"
+                    def jsonContent = jsonParse(tdContent)
+                    
+                    
+                    sh  "                                                                     \
+                    sed -e 's;%REPO%;${imageName};g'\
+                        -e 's;%NEW_RELIC_APP_NAME%;${NEW_RELIC_APP_NAME};g'\
+                        -e 's;%NEW_RELIC_LICENSE_KEY%;${NEW_RELIC_LICENSE_KEY};g'\
+                        -e 's;%ENVIRONMENT%;${ENVIRONMENT};g'\
+                        -e 's;%UENVIRONMENT%;${UENVIRONMENT};g'\
+                        -e 's;%CONTAINERNAME%;${containerName};g'\
+                        -e 's;%TASKDEFINITIONNAME%;${taskDefinitionName};g'\
+                        -e 's;%CONTAINERPORT%;${containerPort};g'\
+                        -e 's;%MEMORY%;${jsonContent."$ENVIRONMENT".memory};g'\
+                        -e 's;%CPU%;${jsonContent."$ENVIRONMENT".cpu};g'\
+                            aws/task-definition.json >\
+                            aws/task-definition-${IMAGE_TAG}.json\
+                    "
+                    
+                   /* -e 's;%NEW_RELIC_APP_NAME%;${NEW_RELIC_APP_NAME};g'\
+                    -e 's;%NEW_RELIC_LICENSE_KEY%;${NEW_RELIC_LICENSE_KEY};g'\*/
+
+                    /*sh "\$(aws ecr get-login --no-include-email --region ${AWS_REGION})"
+                    docker.image("${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com/devops/aws-cli:${AWS_CLI_VERSION}").inside('-u 0') {
+                        sh (returnStdout: false, script: "aws ecs register-task-definition --region ${AWS_REGION} --family ${taskDefinitionName} --cli-input-json file://aws/task-definition-${IMAGE_TAG}.json", label: "Creatting task definition")
+                    }*/
+
+                    sh "\$(aws ecr get-login --no-include-email --region ${AWS_REGION})"
+                    def image = docker.image("${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com/devops/aws-cli:${AWS_CLI_VERSION}")
+                    image.inside('-u 0') {
+                        TASK_DEFINITION = sh (returnStdout: true, script:"                                                                     \
+                            aws ecs register-task-definition --region ${AWS_REGION} --family ${taskDefinitionName}                \
+                            --cli-input-json file://aws/task-definition-${IMAGE_TAG}.json        \
+                        ")
+                    }
+
+                    TASK_DEFINITION_OBJECT = jsonParse(TASK_DEFINITION)
+
+                    def content = "version: 0.0 \
+                    \nResources: \
+                    \n  - TargetService: \
+                    \n      Type: AWS::ECS::Service \
+                    \n      Properties: \
+                    \n        TaskDefinition: \"${TASK_DEFINITION_OBJECT.taskDefinition.taskDefinitionArn}\" \
+                    \n        LoadBalancerInfo: \
+                    \n          ContainerName: \"${containerName}\" \
+                    \n          ContainerPort: ${containerPort}"
+
+                    DEPLOYMENT_ID = sh (returnStdout: true, script: "aws deploy create-deployment --application-name ${applicationName} --deployment-group-name ${deploymentGroupName} --revision \"revisionType='String',string={content='${content}'\"}  --region ${AWS_REGION}").trim()
+                    DEPLOYMENT_OBJECT = jsonParse(DEPLOYMENT_ID)
+                    echo "Deployment-object is => ${DEPLOYMENT_ID}"
+                    echo "Deployment-Id is => ${DEPLOYMENT_OBJECT.deploymentId}"
+                }
+                timeout(time: 20, unit: 'MINUTES'){
+                    awaitDeploymentCompletion("${DEPLOYMENT_OBJECT.deploymentId}")
+                  /*script{
+                    awaitDeploymentCompletion("${DEPLOYMENT_OBJECT.deploymentId}")
+
+                    DEPLOYMENT = sh (returnStdout: true, script: "aws deploy get-deployment --deployment-id ${DEPLOYMENT_OBJECT.deploymentId} --region ${AWS_REGION}").trim()
+                    DEPLOYMENT_STATUS_OBJECT = jsonParse(DEPLOYMENT)
+                    echo "${DEPLOYMENT_STATUS_OBJECT.deploymentInfo.status}"
+
+                    if(DEPLOYMENT_STATUS_OBJECT.deploymentInfo.status == 'Succeeded'){
+                      try{
+                          tagDeployment(NEW_RELIC_APP.id, IMAGE_TAG)
+                      }catch (e) {
+                        echo "No Deployment was registered -> ${e}"
+                      }
+                    }
+
+                  }*/
+                }
+                
+               
+            }
+        }
+    }
+    post {
+        always {
+          script{
+            notifyBuildDevOps(currentBuild.result)
+             try {
+              if(allowCommonBranches() || enableDeploy()){
+                createNewRelicDeploymentEvent(NEW_RELIC_APP_NAME, NEW_RELIC_APP.id, IMAGE_TAG)
+              }
+            } catch (e) {
+              echo "No Deployment was registered -> ${e}"
+            }
+           // notifyBuildTeams('Unete 3.0 - ApiPostulants', "${TEAMS_WEBHOOK}", currentBuild.result)
+          /*  try {
+              if(allowCommonBranches() || enableDeploy()){
+                createNewRelicDeploymentEvent(NEW_RELIC_APP_NAME, NEW_RELIC_APP.id, IMAGE_TAG)
+              }
+            } catch (e) {
+              echo "No Deployment was registered -> ${e}"
+            }*/
+            //cleanWs()
+          }
+        }
+        unstable {
+            echo 'This will run only if the run was marked as unstable'
+        }
+    }
+}
+
+def getEnvironment() {
+     return (isDevelop())?'qas':(isQas()?'qas':((isRelease() || isHotfix())?'ppr':(isMaster())?'prd':'qas'))
+}
+
+def getFixedImageTag() {
+     return (isDevelop())?'qas':(isQas()?'qas':((isRelease() || isHotfix())?'ppr':(isMaster())?'latest':'dev'))
+}
+
+def isMaster() {
+    return env.BRANCH_NAME == "master"
+}
+
+def isRelease() {
+    return env.BRANCH_NAME ==~ '^release\\/[\\w\\d\\.-]*$'
+}
+
+def isHotfix() {
+    return env.BRANCH_NAME ==~ '^hotfix\\/[\\w\\d\\.-]*$'
+}
+
+def isQas() {
+    return env.BRANCH_NAME == "qas"
+}
+
+def isDevelop() {
+    return env.BRANCH_NAME == "develop"
+}
+
+def enableDeploy() {
+  return isMaster() && params.DEPLOY_TO == 'production'
+}
+
+def getShortCommitId() {
+    def gitCommit = env.GIT_COMMIT
+    def shortGitCommit = "${gitCommit[0..6]}"
+    return shortGitCommit
+}
+
+def notifyBuildTeams(String projectName, String webhookUrl, String buildStatus = 'STARTED') {
+    // default build status in case is not passed as parameter
+    buildStatus = buildStatus ?: 'SUCCESS'
+    String buildPhase = (buildStatus == 'STARTED') ? 'STARTED' : 'FINALIZED'
+    currentDate = sh (returnStdout: true, script: "date +'%A, %b %d, %Y %H:%M:%S'").trim()
+
+    sh """curl -H "Content-Type: application/json" -X POST -d '{
+        "@type": "MessageCard",
+        "@context": "http://schema.org/extensions",
+        "themeColor": "0076D7",
+        "summary": "Notificación Devops",
+        "sections": [{
+            "activityTitle": "![TestImage](https://jenkins.io/images/logos/superhero/superhero.png)Devops Belcorp",
+            "activitySubtitle": "${projectName}",
+            "activityImage": "https://jenkins.io/images/logos/superhero/superhero.png",
+            "facts": [
+            {
+                "name": "Project",
+                "value": "${projectName}"
+            },
+            {
+                "name": "Phase",
+                "value": "${buildPhase}"
+            },
+            {
+                "name": "Branch",
+                "value": "${env.BRANCH_NAME}"
+            },
+            {
+                "name": "Commit",
+                "value": "${env.GIT_COMMIT}"
+            },
+            {
+                "name": "Status",
+                "value": "${buildStatus}"
+            },
+            {
+                "name": "Date",
+                "value": "${currentDate}"
+            },
+            {
+                "name": "URL",
+                "value": "[DevOps Belcorp](https://devops.belcorp.biz/job/${env.BUILD_ID}?name=${env.JOB_NAME})"
+            }
+            ],
+            "markdown": true
+        }]
+    }' ${webhookUrl}"""
+}
+
+def notifyBuildDevOps(String buildStatus = 'STARTED') {
+    if(!isPullRequest()){
+      buildStatus = buildStatus ?: 'SUCCESS'
+      String buildPhase = (buildStatus == 'STARTED') ? 'STARTED' : 'FINALIZED'
+      commit = (buildStatus == 'STARTED') ? 'null' : sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'")
+
+      sh """curl -H "Content-Type: application/json" -X POST -d '{
+          "name": "${env.JOB_NAME}",
+          "type": "pipeline",
+          "build": {
+              "phase": "${buildPhase}",
+              "status": "${buildStatus}",
+              "number": ${env.BUILD_ID},
+              "scm": {
+                  "commit": "${commit}"
+              },
+              "artifacts": {}
+          }
+      }' https://devops.belcorp.biz/gestionar_despliegues_qa"""
+    }
+}
+
+def getLabel(){
+  def configuration = jenkins.model.Jenkins.instance.getItem(env.JOB_NAME.minus("/${env.JOB_BASE_NAME}"))
+  return (configuration.getDescription() != '')?configuration.getDescription():'ec2-linux-spot-slave'
+}
+
+def tagDeployment(applicationId, revisionValue) {
+
+    if(applicationId) {
+        echo "NewRelic Application ID: ${applicationId}"
+
+        request = """
+            curl -X POST 'https://api.newrelic.com/v2/applications/${applicationId}/deployments.json' \
+                    -H 'X-Api-Key:${NEW_RELIC_API_KEY}' \
+                    -H 'Content-Type: application/json' \
+                    -d \
+            '{
+                "deployment": {
+                "revision": "${revisionValue}"
+                }
+            }'
+        """
+        echo "${request}"
+        response = sh(script: request, returnStdout: true, label: 'Tagging the deployment in NewRelic')
+        echo "${response}"
+
+    } else {
+        echo "The NewRelic applicationId '${applicationId}' does not exists."
+    }
+}
+
+def getNewRelicApplication(appName){
+    def application
+    def request = """
+    curl -X GET 'https://api.newrelic.com/v2/applications.json' \
+        -H 'X-Api-Key:${NEW_RELIC_API_KEY}' \
+        -G -d 'filter[name]=${appName.replace(' ', '+')}'"""
+
+    echo "${request}"
+
+    def response = sh(script: request, returnStdout: true, label: 'Getting New Relic application info')
+    echo "${response}"
+    def json = jsonParse(response)
+    // validate the json result
+    if(json.applications) {
+        application = json.applications.find { it.name == appName }
+        if(application) {
+            def applicationId = application.id
+            echo "NewRelic Application ID: ${applicationId}"
+        } else {
+            echo "The NewRelic application '${appName}' does not exists."
+        }
+
+    } else {
+        echo "The NewRelic application '${appName}' does not exists."
+    }
+
+    return application
+}
+
+def createNewRelicDeploymentEvent(appName, appId, revisionValue, deploymentType = 'regular') {
+
+    def deployTime = sh(returnStdout: true, script: 'date +%s').trim()
+    def commitTime = sh(returnStdout: true, script: "git show -s --format=%ct ${env.GIT_COMMIT}").trim()
+
+    def request = """
+        curl -X POST 'https://insights-collector.newrelic.com/v1/accounts/${NEW_RELIC_ACCOUNT_ID}/events' \
+             -H 'X-Insert-Key:${NEW_RELIC_INSIGHTS_KEY}' \
+             -H 'Content-Type: application/json' \
+             -d \
+        '{
+          "eventType": "BelDeployment",
+          "appId": "${appId}",
+          "appName": "${appName}",
+          "revision": "${revisionValue}",
+          "environment": "${env.UENVIRONMENT}",
+          "type": "${deploymentType}",
+          "jobName": "${env.JOB_NAME}",
+          "buildNumber": ${env.BUILD_NUMBER},
+          "branchName": "${env.BRANCH_NAME}",
+          "commit": "${env.GIT_COMMIT}",
+          "codeCommittedTime" : "${commitTime}",
+          "codeDeployedTime" : "${deployTime}",
+          "buildStatus": "${currentBuild.result}"
+        }'
+    """
+
+    echo "${request}"
+
+    def response = sh(script: request, returnStdout: true, label: 'Registering the custom event Deployment in NewRelic')
+    echo "${response}"
+    def json = jsonParse(response)
+}
+
+def allowCommonBranches(){
+  return (isDevelop() || isQas() || isRelease() || isHotfix())
+}
+
+def isPullRequest(){
+  return env.CHANGE_ID && env.BRANCH_NAME.startsWith("PR-")
+}

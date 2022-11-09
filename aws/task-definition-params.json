@@ -1,0 +1,18 @@
+{
+  "dev": {
+    "cpu": 256,
+    "memory": 512
+  },
+  "qas": {
+    "cpu": 256,
+    "memory": 512
+  },
+  "ppr": {
+    "cpu": 256,
+    "memory": 512
+  },
+  "prd": {
+    "cpu": 1024,
+    "memory": 2048
+  }
+}
