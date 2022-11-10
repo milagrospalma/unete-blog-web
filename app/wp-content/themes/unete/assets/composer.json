@@ -1,0 +1,11 @@
+{
+  "name": "Blog unete",
+  "authors": [
+    {
+      "name": "Altimea S.A.C.",
+      "email": "apps@altimea.com",
+      "homepage": "http://altimea.com"
+    }
+  ],
+  "type": "project"
+}

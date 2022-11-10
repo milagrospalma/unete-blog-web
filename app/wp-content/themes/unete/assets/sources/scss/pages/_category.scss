@@ -1,0 +1,180 @@
+.unete-blog-category {
+    .intro {
+        margin-bottom: 24px;
+        &__title {
+            font-family: $ff-Montserrat-Light;
+            font-size: 45px;
+            line-height: 48px;
+            margin-bottom: 8px;
+            padding-top: 16px;
+            width: 80%;
+            @include minw($mq-md) {
+                padding-top: 24px;
+                width: 100%;
+            }
+        }
+        &__description {
+            font-family: $ff-Mulish-Regular;
+            font-size: 20px;
+            line-height: 28px;
+            padding-bottom: 8px;
+        }
+    }
+    .most-important {
+        .content {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 24px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid #EFEFEF;
+            @include maxw($mq-md) {
+                flex-direction: column;
+                border-bottom: none;
+                padding-bottom: 0;
+                margin-bottom: 0;
+            }
+            .articles {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                grid-column-gap: 8px;
+                padding-bottom: 8px;
+                margin-bottom: 24px;
+                border-bottom: 1px solid #EFEFEF;
+                @include custom-device($mq-xs, $mq-md) {
+                    grid-column-gap: 12px;
+                }
+                @include minw($mq-md) {
+                    grid-template-columns: repeat(2, 330px);
+                    grid-column-gap: 16px;
+                    padding-bottom: 0;
+                    margin-bottom: 0;
+                    border-bottom: none;
+                }
+            }
+            .article {
+                .cover {
+                    margin-bottom: 10px;
+                    @include minw($mq-md) {
+                        margin-bottom: 8px;
+                    }
+                    img {
+                        width: 100%;
+						height: auto;
+                    }
+                }
+                .name {
+                    font-family: $ff-Montserrat-Bold;
+                    font-size: 18px;
+                    line-height: 24px;
+                    margin-bottom: 8px;
+                    @include minw($mq-md) {
+                        font-size: 20px;
+                    }
+                }
+                .detail {
+                    color: #777676;
+                    font-family: $ff-Mulish-Regular;
+                    font-size: 14px;
+                    line-height: 20px;
+                    margin-bottom: 8px;
+                    max-width: 185px;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    @include maxw(390px) {
+                        height: auto;
+                        max-width: 120px;
+                    }
+                    @include minw($mq-sm) {
+                        max-width: none;
+                    }
+                }
+                .authorship {
+                    color: #777676;
+                    font-family: $ff-Mulish-Bold;
+                    font-size: 12px;
+                    line-height: 16px;
+                    margin-bottom: 8px;
+                }
+            }
+        }
+    }
+    .discover-more {
+        .title {
+            margin-top: 24px;
+            @include minw($mq-md) {
+                margin-top: 0;
+                margin-bottom: 16px;
+            }
+        }
+        .content {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            grid-column-gap: 8px;
+            grid-row-gap: 10px;
+            @include custom-device($mq-xs, $mq-md) {
+                grid-template-columns: repeat(2, 1fr);
+                grid-column-gap: 15px;
+                grid-row-gap: 20px;
+            }
+            @include minw($mq-md) {
+                grid-template-columns: repeat(3, 1fr);
+                grid-column-gap: 56px;
+                grid-row-gap: 25px;
+            }
+        }
+        .article {
+            @include flexvalue(row, space-between, center);
+            max-height: 112px;
+            @include minw($mq-md) {
+                max-width: 330px;
+            }
+            &__content {
+                margin-right: 8px;
+                @include maxw($mq-xs) {
+                    max-width: 75%;
+                }
+                @include minw($mq-md) {
+                    margin-right: 10px;
+                    width: 73%;
+                }
+                .name {
+                    font-family: $ff-Mulish-Bold;
+                    font-size: 16px;
+                    line-height: 22px;
+                    margin-top: 8px;
+                    margin-bottom: 8px;
+
+                }
+                .detail {
+                    color: #777676;
+                    font-family: $ff-Mulish-Regular;
+                    font-size: 14px;
+                    line-height: 20px;
+                    margin-bottom: 8px;
+                    height: auto;
+                    max-width: 185px;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    white-space: nowrap;
+                }
+                .authorship {
+                    color: #777676;
+                    font-family: $ff-Mulish-Bold;
+                    font-size: 12px;
+                    line-height: 16px;
+                    margin-bottom: 8px;
+                }
+            }
+            .cover {
+                max-width: 78px;
+                max-height: 78px;
+                margin-bottom: 0;
+                img {
+                    width: 100%;
+					height: auto;
+                }
+            }
+        }
+    }
+}

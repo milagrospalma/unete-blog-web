@@ -1,0 +1,638 @@
+.single {
+    .unete-blog-header {
+        position: relative;
+    }
+    .nav-blog {
+        border-top: 1px solid #EFEFEF;
+        z-index: 98;
+    }
+}
+
+.unete-blog-article {
+    .article {
+        display: flex;
+        flex-direction: column;
+        margin: 0 auto;
+        padding-top: 20px;
+        @include minw($mq-md) {
+            padding-top: 28px;
+            width: 1240px;
+            @include flexvalue(row,center,flex-start);
+        }
+        &__side-content {
+            max-width: 190px;
+            width: 100%;
+            display: none;
+            @include minw($mq-md) {
+                display: inline-block;
+            }
+            .content-table {
+                width: 83%;
+                padding-bottom: 16px;
+                >h3 {
+                    font-family: $ff-Mulish-Bold;
+                    font-size: 16px;
+                    line-height: 22px;
+                }
+                >.content {
+                    font-family: $ff-Mulish-Medium;
+                    font-size: 14px;
+                    line-height: 20px;
+                    margin-top: 8px;
+                    li {
+                        margin-bottom: 16px;
+                    }
+                }
+            }
+
+            .current-article {
+                border-top: 1px solid #EFEFEF;
+                padding-top: 10px;
+                width: 83%;
+                display: inline-block;
+                .title {
+                    font-family: $ff-Mulish-Bold;
+                    font-size: 14px;
+                    line-height: 20px;
+                }
+                .article__interactions {
+                    @include minw($mq-md) {
+                        @include flexvalue(column, flex-start, flex-start);
+                        margin-top: 25px;
+                    }
+                    .comment {
+                        margin: 0 15px;
+                    }
+                }
+            }
+        }
+        &__content {
+            width: 100%;
+            .container {
+                @include minw($mq-md) {
+                    display: flex;
+                    padding: 0;
+                }
+            }
+            .article-full {
+                @include minw($mq-md) {
+                    box-sizing: border-box;
+                    margin: 0 10px;
+                    padding: 0 15px;
+                    max-width: 700px;
+                }
+            }
+            &__header {
+                margin-bottom: 24px;
+                padding-bottom: 16px;
+                @include minw($mq-md) {
+                    margin-bottom: 16px;
+                }
+                .title {
+                    font-family: $ff-Montserrat-Bold;
+                    font-size: 20px;
+                    line-height: 24px;
+                    @include minw($mq-md) {
+                        font-size: 45px;
+                        line-height: 56px;
+                    }
+                }
+                .subtitle {
+                    font-family: $ff-Mulish-Regular;
+                    font-size: 16px;
+                    line-height: 22px;
+                    margin-top: 8px;
+                    @include minw($mq-md) {
+                        font-size: 20px;
+                        line-height: 28px;
+                    }
+                }
+                .detail {
+                    color: #777676;
+                    font-family: $ff-Mulish-Regular;
+                    font-size: 14px;
+                    line-height: 20px;
+                    margin-top: 8px;
+                }
+                .authorship {
+                    color: #777676;
+                    font-family: $ff-Mulish-Bold;
+                    font-size: 12px;
+                    line-height: 16px;
+                    margin-top: 8px;
+                }
+            }
+            &__body {
+                h2 {
+                    font-family: $ff-Montserrat-Bold;
+                    font-size: 22px;
+                    line-height: 28px;
+                    margin-top: 24px;
+                    margin-bottom: 15px;
+                }
+                h3 {
+                    font-family: $ff-Mulish-Bold;
+                    font-size: 18px;
+                    line-height: 24px;
+                    margin: 15px 0;
+                }
+                p {
+                    font-family: $ff-Mulish-Regular;
+                    font-size: 16px;
+                    line-height: 24px;
+                    margin: 16px 0px;
+                }
+                span {
+                    display: inline-block;
+                    font-family: $ff-Mulish-Regular;
+                    font-size: 14px;
+                    line-height: 20px;
+                    margin-top: 6px;
+                }
+                img {
+                    width: 100%;
+					height: auto;
+                }
+                iframe {
+                    width: 100%;
+                }
+                a {
+                    font-family: $ff-Mulish-Bold;
+                    font-size: 14px;
+                    line-height: 20px;
+                    text-decoration: underline;
+					cursor: pointer;
+                }
+                .wp-caption {
+                    max-width: 100%;
+                    .wp-caption-text {
+                        font-family: $ff-Mulish-Regular;
+                        font-size: 14px;
+                        line-height: 20px;
+                        margin: 8px 0px;
+                    }
+                }
+            }
+            &__footer {
+                margin-bottom: 16px;
+                @include minw($mq-md) {
+                    margin-bottom: 24px;
+                }
+                .article__interactions {
+                    margin-top: 34px;
+                    padding-bottom: 34px;
+                    @include minw($mq-md) {
+                        @include flexvalue(column, flex-start, flex-start);
+                    }
+                    .button-contents-container {
+                        .group {
+                            @include minw($mq-md) {
+                                left: 22%;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        &__interactions {
+            .buttons {
+                @include flexvalue(row, center, center);
+                >div {
+                    @include flexvalue(row, center, center);
+                    @include minw($mq-md) {
+                        cursor: pointer;                        
+                    }
+                    svg.icon-color {
+                        display: none !important;
+                    }
+                }
+                .active {
+                    svg.icon-default {
+                        display: none !important;
+                    }
+                    svg.icon-color {
+                        display: block !important;
+                    }
+                    span {
+                        color: #672779;
+                    }
+                    &.comment {
+                        svg path {
+                            fill: #672779;
+                        }
+                    }
+                }
+                span {
+                    margin-left: 5px;
+                }
+            }
+            .comment {
+                margin: 0 35px;
+                @include minw($mq-md) {
+                    margin: 0 32px;
+                }
+            }
+            span {
+                display: inline-block;
+                font-family: $ff-Mulish-Bold;
+                font-size: 14px;
+                line-height: 20px;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -khtml-user-select: none;
+                -ms-user-select: none;
+            }
+        }
+    }
+    .recommended {
+        @include maxw( $mq-md ) {
+            margin-bottom: 26px;
+        }
+        @include minw($mq-md) {
+            margin-bottom: 40px;
+        }
+        .title {
+            font-family: $ff-Montserrat-Bold;
+            font-size: 20px;
+            line-height: 24px;
+            margin-top: 24px;
+            padding: 8px 0;
+            text-align: center;
+            margin-bottom: 16px;
+            @include minw($mq-md) {
+                margin-top: 0;
+                margin-bottom: 20px;
+            }
+        }
+        .content {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            grid-column-gap: 8px;
+            grid-row-gap: 18px;
+            @include custom-device($mq-xs, $mq-md) {
+                grid-template-columns: repeat(2, 1fr);
+                grid-column-gap: 15px;
+                grid-row-gap: 20px;
+            }
+            @include minw($mq-md) {
+                grid-template-columns: repeat(3, 1fr);
+                grid-column-gap: 56px;
+                grid-row-gap: 25px;
+            }
+        }
+        .article {
+            @include flexvalue(row, space-between, center);
+            margin: 0;
+            @include minw($mq-md) {
+                max-width: 330px;
+                width: 100%;
+            }
+            &__content {
+                margin-right: 8px;
+                @include maxw($mq-xs) {
+                    max-width: 75%;
+                }
+                @include minw($mq-md) {
+                    margin-right: 10px;
+                    width: 73%;
+                }
+                .name {
+                    font-family: $ff-Mulish-Bold;
+                    font-size: 16px;
+                    line-height: 22px;
+                    margin-top: 8px;
+                    margin-bottom: 8px;
+
+                }
+                .detail {
+                    color: #777676;
+                    font-family: $ff-Mulish-Regular;
+                    font-size: 14px;
+                    line-height: 20px;
+                    margin-bottom: 8px;
+                    height: auto;
+                    max-width: 185px;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    white-space: nowrap;
+                }
+                .authorship {
+                    color: #777676;
+                    font-family: $ff-Mulish-Bold;
+                    font-size: 12px;
+                    line-height: 16px;
+                    margin-bottom: 8px;
+                }
+            }
+            .cover {
+                max-width: 78px;
+                max-height: 78px;
+                img {
+                    width: 100%;
+					height: auto;
+                }
+            }
+        }
+        .button {
+            padding: 24px 15px 0;
+            @include minw($mq-md) {
+                @include flex-center;
+                padding: 40px 40px 0;
+            }
+            .btn-recommended-show {
+                width: 100%;
+                @include minw($mq-md) {
+                    width: 50%;
+                }
+            }
+        }
+    }
+}
+
+.comment-container {
+    background-color: #ffffff;
+    width: 100%;
+    overflow: auto;
+    position: absolute;
+    right: -600px;
+    transition: right .5s ease;
+    @include maxw($mq-md) {
+        height: 100%;
+    }
+    @include custom-device($mq-xs,$mq-md) {
+        right: -800px;
+    }
+    @include minw($mq-md) {
+        max-width: 600px;
+    }
+    .header {
+        @include flex-center;
+        background: #ffffff;
+        box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.15);
+        padding: 17px 0;
+        position: sticky;
+        top: 0;
+        z-index: 99;
+        >div {
+            cursor: pointer;
+            display: flex;
+            position: absolute;
+            left: 4%;
+            @include minw($mq-md) {
+                left: 3%;
+            }
+        }
+        >h3 {
+            font-family: $ff-Mulish-Bold;
+            font-size: 16px;
+            line-height: 22px;
+        }
+    }
+    .body {
+        padding: 16px;
+        p {
+            font-family: $ff-Mulish-Regular;
+            font-size: 16px;
+            line-height: 22px;
+            @include maxw($mq-md) {
+                line-height: 24px;
+            }
+        }
+        .btn {
+            box-sizing: border-box;
+            width: 100%;
+            height: 40px;
+            padding: 10px;
+            opacity: 1;
+        	transition: opacity .5s ease-in;
+            @include minw($mq-md) {
+                width: 160px;
+            }
+        }
+        .form {
+            padding-bottom: 16px;
+            .initial {
+                @include flex-center;
+                >.btn {
+                    @include flex-center;
+                    @include minw($mq-md) {
+                        min-width: 328px;
+                    }
+                    svg {
+                        margin-right: 8px;
+                    }
+                }
+            }
+            .opened {
+                @include minw($mq-sm) {
+                    padding: 0 16px;
+                }
+                p {
+                    padding-top: 8px;
+                }
+                span {
+                    display: inline-block;
+                    font-family: $ff-Mulish-Bold;
+                    font-size: 12px;
+                    line-height: 16px;
+                    margin-bottom: 4px;
+                }
+                .input-form {
+                    font-family: $ff-Mulish-Regular;
+                    font-size: 14px;
+                    line-height: 20px;
+                    padding: 12px 16px;
+                    resize: none;
+                    &:focus {
+                        border: 2px solid;
+                    	border-color: #672779;
+                    }
+                }
+                input {
+                    @extend .input-form;
+                    height: 48px;
+                    width: 100%;
+                }
+                .group-comment {
+                    margin-top: 16px;
+                    @include flex-column;
+                }
+                .group-info {
+                    @include minw($mq-md) {
+                        display: flex;
+                        justify-content: space-between;
+                        margin-top: 16px;
+                    }
+                    >div {
+                        margin-top: 16px;
+                        @include minw($mq-md) {
+                            margin-top: 0;
+                            width: 48.5%;
+                        }
+                    }
+                }
+                .group-button {
+                    display: flex;
+                    margin-top: 24px;
+                    @include minw($mq-md) {
+                        margin-top: 32px;
+                    }
+                    .white-button {
+                        margin-right: 8px;
+                        @include minw($mq-sm) {
+                            margin-right: 16px;
+                        }
+                    }
+                }
+            }
+            .confirmation {
+                width: 75%;
+                margin: 0 auto;
+                @include custom-device($mq-xs, $mq-md) {
+                    width: 38%;
+                }
+                @include minw($mq-md) {
+                    width: 58%;
+                }
+                >h2 {
+                    font-family: $ff-Mulish-Bold;
+                    font-size: 18px;
+                    line-height: 26px;
+                    text-align: center;
+                }
+                >p {
+                    font-size: 14px;
+                    line-height: 20px;
+                    margin: 8px 0;
+                    text-align: center;
+                }
+                div {
+                    cursor: pointer;
+                    margin: 0 auto;
+                    padding: 12px 10px;
+                    width: max-content;
+                    >p {
+                        border-bottom: 1px solid black;
+                        font-family: $ff-Mulish-Bold;
+                        font-size: 14px;
+                        line-height: 16px;
+                    }
+                }
+            }
+        }
+        .comments {
+            @include minw($mq-sm) {
+                padding: 0 16px;
+            }
+            .comment-card {
+                >h4 {
+                    font-family: $ff-Mulish-Bold;
+                    font-size: 16px;
+                    line-height: 22px;
+                    margin-top: 32px;
+                }
+                >span {
+                    color: #777676;
+                    font-family: $ff-Mulish-Regular;
+                    font-size: 14px;
+                    line-height: 20px;
+                }
+                .text {
+                    margin-top: 16px;
+                    overflow: auto;
+                    p {
+                        margin-bottom: 16px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.comment-overlay {
+    background-color: rgba(0,0,0,0.5);
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    transition: right .5s ease-in !important;
+    @include maxw($mq-md) {
+        z-index: 999;
+        height: 100vh;
+        overflow: auto;
+    }
+}
+
+.visible-right {
+    right: 0!important;
+    transition: right .5s ease!important;
+}
+
+.button-contents-container {
+    width: 100%;
+    @include minw($mq-md) {
+        position: relative;
+    }
+    @include maxw($mq-md) {
+        background: rgba(0,0,0,.5);
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 999;
+        transition: bottom .5s ease-in;
+    }
+    .group {
+        @include maxw($mq-md) {
+            position: absolute;
+            width: 100%;
+            position: absolute;
+            bottom: -500px;
+            transition: bottom .5s ease;
+        }
+        @include minw($mq-md) {
+            margin-top: 10px;
+            position: absolute;
+            left: 75%;
+        }
+    }
+    .share-options {
+        background-color: #ffffff;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15);
+        border-radius: 4px;
+        width: 282px;
+        padding: 8px 0;
+        box-sizing: border-box;
+        z-index: 99;
+        @include maxw($mq-md) {
+            border-radius: 0;
+            width: 100%;
+        }
+        .btn-option {
+            @include flexvalue(row, flex-start, center);
+            @include maxw($mq-md) {
+                margin-top: 9px;
+                padding: 9px 16px;
+            }
+            @include minw($mq-md) {
+                cursor: pointer;
+                margin-top: 8px;
+                padding: 8px 18px;
+            }
+            &:first-child {
+                margin-top: 0;
+            }
+            >a {
+                @include flexvalue(row, flex-start, center);
+            }
+            span {
+                margin-left: 9px;
+            }
+        }
+    }
+}
+
+.visible-bottom {
+    bottom: 0!important;
+    transition: bottom .5s ease!important;
+}

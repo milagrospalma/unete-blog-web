@@ -1,0 +1,8 @@
+node_modules
+.idea
+aws
+Jenkinsfile
+Dockerfile
+CODEOWNERS
+.github/PULL_REQUEST_TEMPLATE.md
+/app/wp-content/themes/unete/js/**/*

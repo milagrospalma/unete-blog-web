@@ -1,0 +1,54 @@
+// ==== CONFIGURATION ==== //
+
+// Set all your configuration variables here!
+$theme-name:               "Theme Unete";
+$theme-uri:                "https://github.com/tecnologiadigital/unete-blog-web";
+$theme-author:             "Altimea S.A.C.";
+$theme-author-uri:         "http://altimea.com";
+$theme-description:        "Theme blog unete";
+$theme-version:            "1.0.0";
+$theme-text-domain:        "unete-theme";
+$theme-text-domain-path:   "/languages/";
+
+// Images path use css
+// ------------------------------------------------
+$imgs: './img/';
+
+// Define colors
+// ------------------------------------------------
+$brand-primary: #330066;
+$brand-second: #000;
+$body-color: #000;
+
+// Fonts
+// ------------------------------------------------
+$font-path: './fonts/';
+
+$font-size-base: 1rem;
+$font-family-base: sans-serif;
+
+$ff-Montserrat-Bold: 'Montserrat-Bold', sans-serif;
+$ff-Montserrat-Light: 'Montserrat-Light', sans-serif;
+$ff-Montserrat-Medium: 'Montserrat-Medium', sans-serif;
+$ff-Montserrat-Regular: 'Montserrat-Bold', sans-serif;
+$ff-Montserrat-Thin: 'Montserrat-Thin', sans-serif;
+
+$ff-Mulish-Bold: 'Mulish-Bold', sans-serif;
+$ff-Mulish-Light: 'Mulish-Light', sans-serif;
+$ff-Mulish-Medium: 'Mulish-Medium', sans-serif;
+$ff-Mulish-Regular: 'Mulish-Regular', sans-serif;
+
+// Radius
+// $border-radius: 0;
+// $border-radius-lg: 0;
+// $border-radius-sm: 0;
+
+// Btns
+
+// Inputs
+
+// Breadcrumbs
+$breadcrumb-padding-x: 2px;
+$breadcrumb-bg: transparent;
+$breadcrumb-divider: "\203A";
+

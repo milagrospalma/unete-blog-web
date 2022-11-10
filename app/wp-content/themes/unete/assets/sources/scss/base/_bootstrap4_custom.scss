@@ -1,0 +1,54 @@
+// booststrap custom
+.btn{
+	cursor: pointer;
+}
+
+// btn sm
+
+// forms
+select.form-control:not([size]):not([multiple]){
+	height: auto;
+}
+
+// breadcrumb
+// ------------------------------------------------
+.breadcrumb{
+	a{
+		color: $brand-primary;
+	}
+}
+
+// modal
+.close{
+	font-weight: 300;
+}
+
+// Modal center
+// ------------------------------------------------
+.modal{
+	text-align: center;
+	&:before{
+		content: '';
+		display: inline-block;
+		height: 100%;
+		vertical-align: middle;
+		margin-right: -5px;
+	}
+	&-dialog{
+		width: 94%;
+		display: inline-block;
+		text-align: left;
+		vertical-align: middle;
+		@include minw(xs) {
+			max-width: 620px;
+		}
+		&.modal-lg{
+			@include minw(lg) {
+				max-width: 800px;
+			}
+		}
+	}
+	&-content{
+		border: 0;
+	}
+}

@@ -1,0 +1,115 @@
+.unete-blog-footer {
+    .bg-footer {
+        background-image: url($imgs+'footer/bg-mob.jpg');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        height: 516px;
+        @include custom-device($mq-xs, $mq-sm) {
+            background-image: url($imgs+'footer/bg-tablet.jpg');
+            height: 450px;
+        }
+        @include custom-device($mq-sm, $mq-md) {
+            height: 400px;
+        }
+        @include minw($mq-sm) {
+            background-image: url($imgs+'footer/bg-desk.jpg');
+            height: 480px;
+            display: flex;
+            align-items: center;
+        }
+        .container {
+            @include maxw($mq-xs) {
+                @include flexvalue(column, space-between, center);
+                height: 100%;
+            }
+            @include custom-device($mq-xs, $mq-sm) {
+                @include flexvalue(column, center, flex-start);
+                height: 100%;
+            }
+            @include custom-device($mq-sm, $mq-md) {
+                @include flexvalue(column, center, flex-start);
+                height: 100%;
+            }
+        }
+        .title {
+            background: linear-gradient(132.65deg, #EE2737 0%,#BC0075 50.52%,#772583 100%);
+            -webkit-background-clip: text;
+            color: transparent;
+            font-family: $ff-Montserrat-Bold;
+            font-size: 22px;
+            line-height: 28px;
+            margin-top: 48px;
+            margin-bottom: 16px;
+            margin-left: 10px;
+            width: 75%;
+            @include custom-device($mq-xs, $mq-sm) {
+                width: 40%;
+                margin-top: 0;
+            }
+            @include custom-device($mq-sm, $mq-md) {
+                width: 38%;
+                margin-left: 30px;
+                margin-top: 0;
+            }
+            @include minw($mq-md) {
+                font-size: 28px;
+                line-height: 34px;
+                width: 47%;
+                margin: 0 0 16px;
+            }
+        }
+        p {
+            color: #000000;
+            font-family: $ff-Mulish-Regular;
+            font-size: 14px;
+            line-height: 20px;
+            margin-left: 10px;
+            width: 50%;
+            @include custom-device($mq-xs, $mq-sm) {
+                width: 30%;
+            }
+            @include custom-device($mq-sm, $mq-md) {
+                width: 28%;
+                margin-left: 30px;
+            }
+            @include minw($mq-md) {
+                font-size: 16px;
+                line-height: 22px;
+                margin-left: 0;
+                width: 47%;
+            }
+        }
+        .btn-start {
+            @include flex-center;
+            margin-bottom: 24px;
+            width: 90%;
+            filter: drop-shadow(0px 8px 18px rgba(0, 0, 0, 0.25));
+            @include custom-device($mq-xs, $mq-sm) {
+                margin-top: 48px;
+                margin-left: 10px;
+                width: 40%;
+            }
+            @include custom-device($mq-sm, $mq-md) {
+                margin-left: 30px;
+                width: 45%;
+                margin-top: 48px;
+                margin-bottom: 0;
+            }
+            @include minw($mq-md) {
+                width: 328px;
+                margin-top: 48px;
+                margin-bottom: 0;
+            }
+        }
+    }
+    .footer-bottom {
+        background-color: #F6F6F6;
+        color: #000000;
+        font-family: $ff-Mulish-Regular;
+        font-size: 14px;
+        line-height: 20px;
+        padding: 10px 0;
+        text-align: center;
+    }
+}

@@ -1,0 +1,276 @@
+.unete-blog-header {
+    background-color: #FFFFFF;
+    @include minw($mq-md) {
+        z-index: 1;
+    }
+    .nav {
+        &__main {
+            @include maxw($mq-md) {
+                @include flexvalue(row-reverse, center, center);
+                padding: 13px 16px;
+                position: sticky !important;
+                width: 100%;
+                background: #FFFFFF;
+                box-sizing: border-box;
+            }
+            &__brands {
+                @include minw($mq-md) {
+                    padding: 12px 0;
+                }
+                .content {
+                    position: relative;
+                }
+                .brands {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    a {
+                        margin: 0 9px;
+                        height: 30px;
+                        @include maxw($mq-xs) {
+                            max-width: 58px;
+                        }
+                        @include minw($mq-md) {
+                            margin: 0 16px;
+                            height: auto;
+                        }
+                        svg {
+                            @include maxw($mq-sm) {
+                                width: 100%;
+                            }
+                        }
+                        &:first-child {
+                            svg {
+                                padding-top: 0;
+                                @include minw($mq-md) {
+                                    padding-top: 0;
+                                    padding-bottom: 6px;
+                                }
+                            }
+                        }
+                        &:nth-child(2n) {
+                            svg {
+                                padding-top: 8px;
+                                @include custom-device($mq-xs, $mq-md) {
+                                    padding-top: 11px;
+                                }
+                                @include minw($mq-md) {
+                                    padding-top: 3px;
+                                }
+                            }
+                        }
+                        &:last-child {
+                            svg {
+                                padding-top: 6px;
+                                @include custom-device($mq-xs, $mq-md) {
+                                    padding-top: 10px;
+                                }
+                                @include minw($mq-md) {
+                                    padding-top: 5px;
+                                }
+                            }
+                        }
+                    }
+                }
+                .btn-start {
+                    width: 164px;
+                    @include flex-center;
+                    position: absolute;
+                    right: 0;
+                    top: 0;
+                }
+            }
+            &__options {
+                padding-top: 14px;
+                @include maxw($mq-md) {
+                    margin-left: 16px;
+                    padding-top: 0;
+                    position: absolute;
+                    left: 0;
+                }
+                .menu-options {
+                    display: flex;
+                    justify-content: center;
+                    .option {
+                        color: #000000;
+                        display: inline-block;
+                        font-family: $ff-Mulish-Medium;
+                        font-size: 14px;
+                        line-height: 20px;
+                        margin: 0 40px;
+                        padding-bottom: 10px;
+                        text-align: center;
+                    }
+					.js-replace-mto {
+						display: none;
+					}
+                    .selected {
+                        font-family: $ff-Mulish-Bold;
+                        border-bottom: 3px solid #672779;
+                    }
+                }
+                .sidenav-open {
+                    @include flex-center;
+                    padding: 4px 2px;
+                }
+            }
+            &__scroll {
+                @extend .nav__main__brands;
+                @extend .nav__main__options;
+                background-color: #ffffff;
+                height: 64px;
+                padding: 0;
+                position: fixed;
+                width: 100%;
+                top: 0;
+                display: none;
+                z-index: 1;
+                .container {
+                    @include flexvalue(row, space-between, center);
+                    position: relative;
+                    height: 100%;
+                    @include minw($mq-md) {
+                        max-width: 1130px;
+                    }
+                }
+                .brands {
+                    a {
+                        margin: 0 10px;
+                    }
+                    img {
+                        width: 89%;
+                    }
+                }
+                .menu-options {
+                    height: 100%;
+                    .option {
+                        margin: 0 16px;
+                        padding: 22px 0 18px;
+                        box-sizing: border-box;
+                        height: 100%;
+                    }
+                }
+                .btn-start {
+                    position: relative;
+                }
+            }
+        }
+        &__side {
+            position: absolute;
+            width: 100%;
+            height: 100vh;
+            top: 0;
+            transition: left 0.5s ease;
+            .overlay {
+                background-color: rgba(0,0,0,0.25);
+                height: 100vh;
+                width: 100%;
+                position: fixed;
+                z-index: 99;
+                top: 0;
+                transition: left 1s ease-in !important;
+            }
+            .nav__main__sidenav {
+                background: #ffffff;
+                top: 0;
+                z-index: 999;
+                width: 90%;
+                box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15);
+                position: relative;
+                overflow: auto;
+                height: 100%;
+                left: -500px;
+                transition: left .5s ease;
+                @include minw($mq-xs) {
+                    width: 50%;
+                }
+                .container-sidenav {
+                    width: 100%;
+                    height: inherit;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                }
+                .sidenav-close {
+                    position: absolute;
+                    right: 0;
+                    top: 0;
+                    padding: 10px;
+                    margin: 8px;
+                }
+                .sidenav {
+                    transform: translateX(0%);
+                    width: auto;
+                    z-index: 99999;
+                    left: 0;
+                    margin: 60px 8px 30px 24px;
+                    overflow-x: auto;
+                    padding-right: 16px;
+                    li {
+                        border-bottom: .5px solid #E0E0E0;
+                        &:last-child {
+                            border-bottom: none;
+                        }
+                    }
+                    .option {
+                        color: #000000;
+                        display: flex;
+                        font-family: $ff-Mulish-Regular;
+                        font-size: 20px;
+                        line-height: 28px;
+                        padding: 25px 0;
+
+                    }
+                    .selected {
+                        color: #BC0075;
+                        font-family: $ff-Mulish-Bold;
+                    }
+                }
+                .contact {
+                    background-color: #F6F6F6;
+                    padding: 24px;
+                    width: auto;
+                    h4 {
+                        font-family: $ff-Mulish-Bold;
+                        font-size: 16px;
+                        line-height: 22px;
+                        margin-bottom: 16px;
+                    }
+                    div {
+                        margin-top: 8px;
+                    }
+                    img {
+                        margin-right: 5px;
+                    }
+                    span {
+                        font-family: $ff-Mulish-Regular;
+                        font-size: 16px;
+                        line-height: 26px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.visible {
+    left: 0px !important;
+    transition: left .5s ease !important;
+}
+
+.nav-up {
+    @include maxw($mq-sm) {
+        top: -40px;
+    }
+}
+
+.nav-down {
+    @include maxw($mq-sm) {
+        background-color: #FFFFFF;
+        box-sizing: border-box;
+        position: sticky !important;
+        top: 0;
+        width: 100%;
+        z-index: 99;
+    }
+}

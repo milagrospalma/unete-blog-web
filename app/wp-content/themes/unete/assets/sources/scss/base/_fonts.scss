@@ -1,0 +1,32 @@
+ /**
+ * Define fonts
+ */
+
+// Monserrat
+@include font-face("Montserrat-Black", $font-path + "montserrat/Montserrat-Black", ttf);
+@include font-face("Montserrat-Bold", $font-path + "montserrat/Montserrat-Bold", eot woff woff2 ttf svg);
+@include font-face("Montserrat-ExtraBold", $font-path + "montserrat/Montserrat-ExtraBold", ttf);
+@include font-face("Montserrat-ExtraLight", $font-path + "montserrat/Montserrat-ExtraLight", ttf);
+@include font-face("Montserrat-Light", $font-path + "montserrat/Montserrat-Light", eot woff woff2 ttf svg);
+@include font-face("Montserrat-Medium", $font-path + "montserrat/Montserrat-Medium", ttf);
+@include font-face("Montserrat-Regular", $font-path + "montserrat/Montserrat-Regular", ttf);
+@include font-face("Montserrat-SemiBold", $font-path + "montserrat/Montserrat-SemiBold", ttf);
+@include font-face("Montserrat-Thin", $font-path + "montserrat/Montserrat-Thin", ttf);
+
+// Mulish
+@include font-face("Mulish-Black", $font-path + "mulish/Mulish-Black", ttf);
+@include font-face("Mulish-BlackItalic", $font-path + "mulish/Mulish-BlackItalic", ttf);
+@include font-face("Mulish-Bold", $font-path + "mulish/Mulish-Bold", eot woff woff2 ttf svg);
+@include font-face("Mulish-BoldItalic", $font-path + "mulish/Mulish-BoldItalic", ttf);
+@include font-face("Mulish-ExtraBold", $font-path + "mulish/Mulish-ExtraBold", ttf);
+@include font-face("Mulish-ExtraBoldItalic", $font-path + "mulish/Mulish-ExtraBoldItalic", ttf);
+@include font-face("Mulish-ExtraLight", $font-path + "mulish/Mulish-ExtraLight", ttf);
+@include font-face("Mulish-ExtraLightItalic", $font-path + "mulish/Mulish-ExtraLightItalic", ttf);
+@include font-face("Mulish-Italic", $font-path + "mulish/Mulish-Italic", ttf);
+@include font-face("Mulish-Light", $font-path + "mulish/Mulish-Light", ttf);
+@include font-face("Mulish-LightItalic", $font-path + "mulish/Mulish-LightItalic", ttf);
+@include font-face("Mulish-Medium", $font-path + "mulish/Mulish-Medium", eot woff woff2 ttf svg);
+@include font-face("Mulish-MediumItalic", $font-path + "mulish/Mulish-MediumItalic", ttf);
+@include font-face("Mulish-Regular", $font-path + "mulish/Mulish-Regular", eot woff woff2 ttf svg);
+@include font-face("Mulish-SemiBold", $font-path + "mulish/Mulish-SemiBold", ttf);
+@include font-face("Mulish-SemiBoldItalic", $font-path + "mulish/Mulish-SemiBoldItalic", ttf);

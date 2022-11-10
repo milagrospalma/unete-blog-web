@@ -1,0 +1,27 @@
+// ==== STYLES ==== //
+
+// Configuration variables and settings
+@import "variables";
+// add mixins
+@import "mixin/_general";
+
+/*!
+Theme Name: #{$theme-name}
+Theme URI: #{$theme-uri}
+Author: #{$theme-author}
+Author URI: #{$theme-author-uri}
+Description: #{$theme-description}
+Version: #{$theme-version}
+Text Domain: #{$theme-text-domain}
+*/
+
+// slick
+
+// end load plugins
+
+// local styles
+@import "base/_general";
+@import "templates/_general";
+@import "components/_general";
+@import "plugins_custom/_general";
+@import "pages/_general";

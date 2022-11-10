@@ -1,0 +1,116 @@
+.membership {
+    background-color: #F6F6F6;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 32px 24px;
+    height: fit-content;
+    @include minw($mq-md) {
+        width: 330px;
+    }
+    .subscription {
+        &__title {
+            font-family: $ff-Montserrat-Bold;
+            font-size: 16px;
+            line-height: 24px;
+            margin-bottom: 16px;
+        }
+        &__description {
+            font-family: $ff-Mulish-Medium;
+            font-size: 14px;
+            line-height: 20px;
+            margin-bottom: 16px;
+        }
+        &__input {
+            .group-form {
+                display: flex;
+                align-items: stretch;
+                width: 100%;
+            }
+            .input-email {
+                font-family: $ff-Mulish-Regular;
+                font-size: 14px;
+                line-height: 20px;
+                padding: 12px 16px;
+                flex: 1 1 auto;
+                width: 1%;
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+                &:focus {
+                    border: 2px solid;
+                    border-color: #000000;
+                    transition: border-color .5s ease-in-out;
+                }
+            }
+            .form-button {
+                display: flex;
+                .btn-send{
+                    background-color: #000000;
+                    display: inline-block;
+                    user-select: none;
+                    border: 1px solid #000000;
+                    padding: 14px 13px;
+                    border-radius: 0px 4px 4px 0px;
+                    border-top-left-radius: 0;
+                    border-bottom-left-radius: 0;
+                }
+            }
+            .error-message {
+                margin-top: 6px;
+                display: flex;
+                align-items: center;
+                > p {
+                    color: #D40000;
+                    font-family: $ff-Mulish-Bold;
+                    font-size: 12px;
+                    line-height: 16px;
+                    margin-left: 5px;
+                }
+            }
+        }
+        &__terms {
+            @extend .subscription__description;
+            margin-top: 16px;
+            margin-bottom: 0;
+            a {
+                font-family: $ff-Mulish-Bold;
+                text-decoration: underline;
+            }
+        }
+        &__recaptcha {
+            @extend .subscription__terms;
+            font-family: $ff-Mulish-Regular;
+            color: #777676;
+            font-size: 12px;
+            line-height: 16px;
+        }
+    }
+    .confirmation {
+        padding: 40px 10px;
+        @include maxw($mq-xs) {
+            padding: 15px 0;
+        }
+        display: none;
+        &__title {
+            @extend .subscription__title;
+            margin-top: 10px;
+            margin-bottom: 8px;
+            text-align: center;
+            @include maxw($mq-xs) {
+                font-size: 18px;
+                line-height: 26px;
+            }
+        }
+        > svg {
+            margin: 0 auto;
+            display: block;
+        }
+        &__description {
+            @extend .subscription__description;
+            margin-bottom: 0;
+            text-align: center;
+        }
+    }
+}
+.grecaptcha-badge {
+	visibility: hidden;
+}
